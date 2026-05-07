@@ -15,7 +15,7 @@
 
     <!-- Splash screen theme -->
     <style name="Theme.PDFproPready.Splash" parent="Theme.PDFproPready">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowBackground">@color/purple_500</item>
     </style>
 
     <!-- Night mode theme -->
