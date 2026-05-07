@@ -11,10 +11,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // JitPack MUST be here for app dependencies, not just in pluginManagement
-        maven { url = uri("https://jitpack.io") }
+        maven { url 'https://jitpack.io' }
     }
 }
 
 rootProject.name = "PDFpro-Pready"
-include(":app")
+include ':app'
