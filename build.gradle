@@ -1,26 +1,8 @@
-// Top-level build file
-buildscript {
-    ext {
-        kotlin_version = '1.9.22'
-        hilt_version = '2.50'
-        compose_version = '1.6.0'
-        compose_material3_version = '1.2.0'
-        room_version = '2.6.1'
-        pdfium_version = '1.9.0'
-        tesseract_version = '4.7.0'
-    }
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '8.2.0' apply false
+    id 'com.android.library' version '8.2.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.20' apply false
+    id 'com.google.dagger.hilt.android' version '2.48' apply false
+    id 'com.google.devtools.ksp' version '1.9.20-1.0.14' apply false
 }
