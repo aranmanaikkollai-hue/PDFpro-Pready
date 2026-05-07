@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/scrim"
+        app:titleTextColor="@color/text_primary"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/text_primary" />
+
+    <!-- Camera Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Capture Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnCapture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="120dp"
+        android:src="@drawable/ic_camera"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/text_on_primary"
+        app:fabCustomSize="72dp"
+        app:maxImageSize="32dp" />
+
+    <!-- Color Mode Selector -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="200dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_color_mode"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/btnAuto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auto"
+            android:textColor="@color/primary"
+            android:textSize="12sp"
+            android:padding="8dp 12dp" />
+
+        <TextView
+            android:id="@+id/btnColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/color"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:padding="8dp 12dp" />
+
+        <TextView
+            android:id="@+id/btnGrayscale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grayscale"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:padding="8dp 12dp" />
+
+        <TextView
+            android:id="@+id/btnBlackWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/black_white"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:padding="8dp 12dp" />
+
+    </LinearLayout>
+
+    <!-- Page Strip -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="@color/scrim">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPages"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:padding="8dp"
+            android:clipToPadding="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <TextView
+                android:id="@+id/tvPageCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_pdf"
+                android:visibility="gone"
+                app:backgroundTint="@color/primary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/primary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
