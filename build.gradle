@@ -1,0 +1,26 @@
+// Top-level build file
+buildscript {
+    ext {
+        kotlin_version = '1.9.22'
+        hilt_version = '2.50'
+        compose_version = '1.6.0'
+        compose_material3_version = '1.2.0'
+        room_version = '2.6.1'
+        pdfium_version = '1.9.0'
+        tesseract_version = '4.7.0'
+    }
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}
