@@ -63,7 +63,15 @@
     <color name="highlight_green">#FF00FF00</color>
     <color name="highlight_blue">#FF0000FF</color>
     <color name="highlight_red">#FFFF0000</color>
-
+   
+    <!-- Missing colors from latest build -->
+    <color name="accent">#FF6750A4</color>
+    <color name="text_hint">#FF9E9E9E</color>
+    <color name="annotation_yellow">#FFFFEB3B</color>
+    <color name="annotation_red">#FFFF5252</color>
+    <color name="annotation_blue">#FF448AFF</color>
+    <color name="divider">#FFE0E0E0</color>
+    
     <!-- Status -->
     <color name="success">#FF4CAF50</color>
     <color name="warning">#FFFFA726</color>
