@@ -299,7 +299,7 @@ class DocumentScannerActivity : AppCompatActivity() {
                 }
 
                 val fileName = FileUtils.generateUniqueFileName("scanned")
-                val uri = FileUtils.savePdfToDownloads(this@DocumentScannerActivity, document, fileName)
+                val pdfFile = File(outputDir, "scanned_${System.currentTimeMillis()}.pdf")
                 document.close()
 
                 withContext(Dispatchers.Main) {
