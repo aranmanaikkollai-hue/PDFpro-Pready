@@ -5,16 +5,9 @@ import com.propdf.editor.domain.model.AnnotationType
 
 class Converters {
     @TypeConverter
-    fun fromAnnotationType(type: AnnotationType): String {
-        return type.name
-    }
+    fun fromAnnotationType(value: AnnotationType): String = value.name
 
     @TypeConverter
-    fun toAnnotationType(value: String): AnnotationType {
-        return try {
-            AnnotationType.valueOf(value)
-        } catch (e: IllegalArgumentException) {
-            AnnotationType.HIGHLIGHT
-        }
-    }
+    fun toAnnotationType(value: String): AnnotationType =
+        try { AnnotationType.valueOf(value) } catch (_: Exception) { AnnotationType.HIGHLIGHT }
 }
