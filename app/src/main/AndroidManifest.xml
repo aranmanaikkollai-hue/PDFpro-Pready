@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,7 +10,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Features -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -28,12 +26,10 @@
         android:theme="@style/Theme.PDFproPready"
         tools:targetApi="34">
 
-        <!-- AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
-        <!-- Main Activity -->
         <activity
             android:name=".ui.home.MainActivity"
             android:exported="true"
@@ -44,28 +40,27 @@
             </intent-filter>
         </activity>
 
-        <!-- PDF Viewer Activity -->
         <activity
             android:name=".ui.viewer.PdfViewerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
-        <!-- Tools Activity -->
         <activity
             android:name=".ui.tools.ToolsActivity"
             android:exported="false" />
 
-        <!-- Scanner Activity -->
         <activity
-            android:name=".ui.scanner.ScannerActivity"
+            android:name=".ui.scanner.DocumentScannerActivity"
             android:exported="false" />
 
-        <!-- Settings Activity -->
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:exported="false" />
 
-        <!-- File Provider -->
+        <activity
+            android:name=".ui.settings.OpenSourceLicensesActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
