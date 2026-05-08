@@ -5,9 +5,13 @@ import androidx.room.Room
 import com.propdf.editor.data.local.db.ProPDFDatabase
 import com.propdf.editor.data.ocr.TesseractOcrEngine
 import com.propdf.editor.data.pdfium.PdfiumEngine
+import com.propdf.editor.data.repository.BookmarkRepositoryImpl
 import com.propdf.editor.data.repository.OcrRepositoryImpl
+import com.propdf.editor.data.repository.PdfRepositoryImpl
 import com.propdf.editor.data.repository.PdfViewerRepositoryImpl
+import com.propdf.editor.domain.repository.BookmarkRepository
 import com.propdf.editor.domain.repository.OcrRepository
+import com.propdf.editor.domain.repository.PdfRepository
 import com.propdf.editor.domain.repository.PdfViewerRepository
 import dagger.Binds
 import dagger.Module
@@ -32,6 +36,18 @@ abstract class AppModule {
     abstract fun bindOcrRepository(
         impl: OcrRepositoryImpl
     ): OcrRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPdfRepository(
+        impl: PdfRepositoryImpl
+    ): PdfRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBookmarkRepository(
+        impl: BookmarkRepositoryImpl
+    ): BookmarkRepository
 
     companion object {
 
