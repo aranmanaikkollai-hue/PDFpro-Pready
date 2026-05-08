@@ -22,7 +22,6 @@ class TesseractOcrEngine(private val context: Context) {
             tessData.mkdirs()
         }
 
-        // Copy traineddata from assets if not exists
         val trainedDataFile = File(tessData, "$language.traineddata")
         if (!trainedDataFile.exists()) {
             try {
@@ -58,6 +57,6 @@ class TesseractOcrEngine(private val context: Context) {
     }
 
     fun release() {
-        tessBaseApi.end()
+        tessBaseApi.stop()
     }
 }
