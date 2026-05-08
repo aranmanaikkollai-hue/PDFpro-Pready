@@ -1,11 +1,15 @@
 package com.propdf.editor.di
 
 import android.content.Context
+import androidx.room.Room
 import com.propdf.editor.data.local.db.ProPDFDatabase
-import com.propdf.editor.ocr.TesseractOcrEngine
-import com.propdf.editor.pdf.PdfiumEngine
-import com.propdf.editor.repository.OcrRepository
-import com.propdf.editor.repository.PdfViewerRepository
+import com.propdf.editor.data.ocr.TesseractOcrEngine
+import com.propdf.editor.data.pdfium.PdfiumEngine
+import com.propdf.editor.data.repository.OcrRepositoryImpl
+import com.propdf.editor.data.repository.PdfViewerRepositoryImpl
+import com.propdf.editor.domain.repository.OcrRepository
+import com.propdf.editor.domain.repository.PdfViewerRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,35 +19,44 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+abstract class AppModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideProPDFDatabase(@ApplicationContext context: Context): ProPDFDatabase {
-        return ProPDFDatabase.getInstance(context)
-    }
+    abstract fun bindPdfViewerRepository(
+        impl: PdfViewerRepositoryImpl
+    ): PdfViewerRepository
 
-    @Provides
+    @Binds
     @Singleton
-    fun providePdfiumEngine(@ApplicationContext context: Context): PdfiumEngine {
-        return PdfiumEngine(context)
-    }
+    abstract fun bindOcrRepository(
+        impl: OcrRepositoryImpl
+    ): OcrRepository
 
-    @Provides
-    @Singleton
-    fun providePdfViewerRepository(engine: PdfiumEngine): PdfViewerRepository {
-        return PdfViewerRepository(engine)
-    }
+    companion object {
 
-    @Provides
-    @Singleton
-    fun provideTesseractOcrEngine(@ApplicationContext context: Context): TesseractOcrEngine {
-        return TesseractOcrEngine(context)
-    }
+        @Provides
+        @Singleton
+        fun provideProPDFDatabase(
+            @ApplicationContext context: Context
+        ): ProPDFDatabase {
+            return Room.databaseBuilder(
+                context,
+                ProPDFDatabase::class.java,
+                "propdf_database"
+            ).build()
+        }
 
-    @Provides
-    @Singleton
-    fun provideOcrRepository(engine: TesseractOcrEngine): OcrRepository {
-        return OcrRepository(engine)
+        @Provides
+        @Singleton
+        fun providePdfiumEngine(
+            @ApplicationContext context: Context
+        ): PdfiumEngine = PdfiumEngine(context)
+
+        @Provides
+        @Singleton
+        fun provideTesseractOcrEngine(
+            @ApplicationContext context: Context
+        ): TesseractOcrEngine = TesseractOcrEngine(context)
     }
 }
