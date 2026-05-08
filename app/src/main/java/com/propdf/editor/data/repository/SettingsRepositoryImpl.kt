@@ -1,69 +1,48 @@
 package com.propdf.editor.data.repository
 
 import android.content.Context
-import android.graphics.Color
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import androidx.datastore.preferences.preferencesDataStore
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.propdf.editor.domain.model.DevicePerformanceProfile
 import com.propdf.editor.domain.repository.SettingsRepository
-import com.propdf.editor.utils.DeviceCapabilities
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "propdf_settings")
-
 @Singleton
 class SettingsRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext context: Context
 ) : SettingsRepository {
 
-    private val dataStore = context.dataStore
+    private val prefs: SharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    private val darkModeFlow = MutableStateFlow(prefs.getBoolean("dark_mode", false))
+    private val lowMemoryFlow = MutableStateFlow(prefs.getBoolean("low_memory", false))
+    private val annotationColorFlow = MutableStateFlow(prefs.getInt("annotation_color", -0x10000))
+    private val performanceFlow = MutableStateFlow(
+        try {
+            DevicePerformanceProfile.valueOf(prefs.getString("performance", "HIGH") ?: "HIGH")
+        } catch (_: Exception) { DevicePerformanceProfile.HIGH }
+    )
 
-    private object PreferencesKeys {
-        val DARK_MODE = booleanPreferencesKey("dark_mode")
-        val LOW_MEMORY_MODE = booleanPreferencesKey("low_memory_mode")
-        val DEFAULT_ANNOTATION_COLOR = intPreferencesKey("default_annotation_color")
-        val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
-    }
-
-    override suspend fun isDarkModeEnabled(): Boolean {
-        return dataStore.data.map { it[PreferencesKeys.DARK_MODE] ?: true }.first()
-    }
-
+    override fun isDarkModeEnabled(): Flow<Boolean> = darkModeFlow
     override suspend fun setDarkMode(enabled: Boolean) {
-        dataStore.edit { it[PreferencesKeys.DARK_MODE] = enabled }
+        prefs.edit { putBoolean("dark_mode", enabled) }
+        darkModeFlow.value = enabled
     }
 
-    override suspend fun isLowMemoryModeEnabled(): Boolean {
-        return dataStore.data.map { it[PreferencesKeys.LOW_MEMORY_MODE] ?: DeviceCapabilities.isLowRamDevice }.first()
-    }
-
+    override fun isLowMemoryModeEnabled(): Flow<Boolean> = lowMemoryFlow
     override suspend fun setLowMemoryMode(enabled: Boolean) {
-        dataStore.edit { it[PreferencesKeys.LOW_MEMORY_MODE] = enabled }
+        prefs.edit { putBoolean("low_memory", enabled) }
+        lowMemoryFlow.value = enabled
     }
 
-    override suspend fun getDefaultAnnotationColor(): Int {
-        return dataStore.data.map { it[PreferencesKeys.DEFAULT_ANNOTATION_COLOR] ?: Color.RED }.first()
-    }
-
+    override fun getDefaultAnnotationColor(): Flow<Int> = annotationColorFlow
     override suspend fun setDefaultAnnotationColor(color: Int) {
-        dataStore.edit { it[PreferencesKeys.DEFAULT_ANNOTATION_COLOR] = color }
+        prefs.edit { putInt("annotation_color", color) }
+        annotationColorFlow.value = color
     }
 
-    override suspend fun getPerformanceProfile(): DevicePerformanceProfile {
-        val lowMemoryMode = isLowMemoryModeEnabled()
-        val isLowEnd = lowMemoryMode || DeviceCapabilities.isLowRamDevice
-
-        return DevicePerformanceProfile(
-            isLowEnd = isLowEnd,
-            renderQuality = if (isLowEnd) 150 else 300,
-            enableAnimations = !isLowEnd && DeviceCapabilities.shouldEnableAnimations(),
-            useCompose = DeviceCapabilities.shouldEnableCompose(),
-            maxConcurrentOperations = if (isLowEnd) 1 else DeviceCapabilities.getOptimalThreadPoolSize()
-        )
-    }
+    override fun getPerformanceProfile(): Flow<DevicePerformanceProfile> = performanceFlow
 }
