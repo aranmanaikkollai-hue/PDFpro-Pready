@@ -1,187 +1,73 @@
 package com.propdf.editor.ui.viewer
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.propdf.editor.domain.model.PdfBookmark
-import com.propdf.editor.domain.repository.*
-import com.propdf.editor.utils.DeviceCapabilities
+import com.propdf.editor.domain.model.PdfDocument
+import com.propdf.editor.domain.repository.PdfViewerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(
-    private val viewerRepository: PdfViewerRepository,
-    private val bookmarkRepository: BookmarkRepository,
-    private val annotationRepository: AnnotationRepository,
-    private val ocrRepository: OcrRepository
+    private val pdfViewerRepository: PdfViewerRepository
 ) : ViewModel() {
 
-    private val _pdfUri = MutableStateFlow<Uri?>(null)
-    val pdfUri: StateFlow<Uri?> = _pdfUri.asStateFlow()
-
-    private val _pageCount = MutableStateFlow(0)
-    val pageCount: StateFlow<Int> = _pageCount.asStateFlow()
+    private val _document = MutableStateFlow<PdfDocument?>(null)
+    val document: StateFlow<PdfDocument?> = _document
 
     private val _currentPage = MutableStateFlow(0)
-    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
+    val currentPage: StateFlow<Int> = _currentPage
+
+    private val _pageCount = MutableStateFlow(0)
+    val pageCount: StateFlow<Int> = _pageCount
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
-
-    private val _bookmarks = MutableStateFlow<List<PdfBookmark>>(emptyList())
-    val bookmarks: StateFlow<List<PdfBookmark>> = _bookmarks.asStateFlow()
-
-    private val _searchResults = MutableStateFlow<List<com.propdf.editor.domain.model.SearchResult>>(emptyList())
-    val searchResults: StateFlow<List<com.propdf.editor.domain.model.SearchResult>> = _searchResults.asStateFlow()
-
-    private val _isAnnotationMode = MutableStateFlow(false)
-    val isAnnotationMode: StateFlow<Boolean> = _isAnnotationMode.asStateFlow()
-
-    private val _ocrText = MutableStateFlow<String?>(null)
-    val ocrText: StateFlow<String?> = _ocrText.asStateFlow()
-
-    private val pageCache = mutableMapOf<Int, Bitmap>()
-    private val maxCacheSize = DeviceCapabilities.getOptimalBitmapPoolSize()
-
-    private val _pageBitmap = MutableStateFlow<Bitmap?>(null)
-    val pageBitmap: StateFlow<Bitmap?> = _pageBitmap.asStateFlow()
+    val error: StateFlow<String?> = _error
 
     fun openDocument(uri: Uri) {
         viewModelScope.launch {
             _isLoading.value = true
-            try {
-                _pdfUri.value = uri
-                val result = viewerRepository.openDocument(uri)
-                result.onSuccess { info ->
-                    _pageCount.value = info.pageCount
+            _error.value = null
+            val result = pdfViewerRepository.openDocument(uri)
+            result.fold(
+                onSuccess = { doc ->
+                    _document.value = doc
+                    _pageCount.value = doc.pageCount
                     _currentPage.value = 0
-                    loadPage(0)
-                    loadBookmarks(uri.toString())
-                }.onFailure { e ->
+                },
+                onFailure = { e ->
                     _error.value = e.message
                 }
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun loadPage(pageNumber: Int) {
-        viewModelScope.launch {
-            if (pageNumber < 0 || pageNumber >= _pageCount.value) return@launch
-
-            // Check cache first
-            pageCache[pageNumber]?.let {
-                _pageBitmap.value = it
-                _currentPage.value = pageNumber
-                return@launch
-            }
-
-            // Evict old cache entries if needed
-            while (pageCache.size >= maxCacheSize) {
-                pageCache.keys.firstOrNull()?.let { key ->
-                    pageCache.remove(key)?.recycle()
-                }
-            }
-
-            val result = viewerRepository.renderPage(
-                pageNumber,
-                width = 1080,
-                height = 1920
             )
-            result.onSuccess { bitmap ->
-                pageCache[pageNumber] = bitmap
-                _pageBitmap.value = bitmap
-                _currentPage.value = pageNumber
-            }.onFailure { e ->
-                _error.value = e.message
-            }
+            _isLoading.value = false
         }
     }
 
-    fun nextPage() {
-        loadPage(_currentPage.value + 1)
-    }
-
-    fun previousPage() {
-        loadPage(_currentPage.value - 1)
-    }
-
-    fun jumpToPage(pageNumber: Int) {
-        loadPage(pageNumber)
-    }
-
-    fun toggleAnnotationMode() {
-        _isAnnotationMode.value = !_isAnnotationMode.value
-    }
-
-    fun addBookmark(title: String) {
-        viewModelScope.launch {
-            val uri = _pdfUri.value?.toString() ?: return@launch
-            val bookmark = PdfBookmark(
-                pdfUri = uri,
-                pageNumber = _currentPage.value,
-                title = title
-            )
-            bookmarkRepository.addBookmark(bookmark)
-            loadBookmarks(uri)
-        }
-    }
-
-    private fun loadBookmarks(pdfUri: String) {
-        viewModelScope.launch {
-            bookmarkRepository.getBookmarks(pdfUri).collect { list ->
-                _bookmarks.value = list
-            }
+    fun goToPage(page: Int) {
+        if (page in 0 until _pageCount.value) {
+            _currentPage.value = page
         }
     }
 
     fun searchInDocument(query: String) {
         viewModelScope.launch {
-            val result = viewerRepository.searchInDocument(query)
-            result.onSuccess { results ->
-                _searchResults.value = results
-            }
+            pdfViewerRepository.searchInDocument(query)
         }
     }
 
-    fun runOcrOnCurrentPage(bitmap: Bitmap) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val result = ocrRepository.recognizeText(bitmap)
-                result.onSuccess { ocrResult ->
-                    _ocrText.value = ocrResult.text
-                }.onFailure { e ->
-                    _error.value = e.message
-                }
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun clearOcrResult() {
-        _ocrText.value = null
-    }
-
-    fun clearError() {
-        _error.value = null
+    fun closeDocument() {
+        pdfViewerRepository.closeDocument()
     }
 
     override fun onCleared() {
         super.onCleared()
-        pageCache.values.forEach { it.recycle() }
-        pageCache.clear()
-        viewModelScope.launch {
-            viewerRepository.closeDocument()
-        }
+        closeDocument()
     }
 }
