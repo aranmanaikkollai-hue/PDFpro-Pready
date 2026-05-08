@@ -11,196 +11,80 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Top Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Top Bar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/scrim"
-        android:elevation="0dp"
-        app:titleTextColor="@color/text_primary"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="@color/text_primary" />
-
-    <!-- Page Counter -->
-    <TextView
-        android:id="@+id/tvPageCount"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:background="@drawable/bg_page_counter"
-        android:textColor="@color/text_primary"
-        android:textSize="14sp"
-        android:padding="8dp 16dp"
-        android:visibility="gone" />
+        android:background="@color/scrim">
 
-    <!-- Bottom Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/scrim"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Bottom Annotation Bar -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_margin="16dp"
         app:cardBackgroundColor="@color/surface"
-        app:cardCornerRadius="16dp 16dp 0dp 0dp"
-        app:cardElevation="8dp"
-        app:strokeWidth="0dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="8dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <ImageButton
+                android:id="@+id/btnHighlight"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_color"
+                app:tint="@color/annotation_yellow" />
+
+            <ImageButton
+                android:id="@+id/btnDrawRed"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_color"
+                app:tint="@color/annotation_red" />
+
+            <ImageButton
+                android:id="@+id/btnDrawBlue"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_color"
+                app:tint="@color/annotation_blue" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@color/divider" />
 
             <ImageButton
                 android:id="@+id/btnSearch"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_search"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/search_pdf"
-                app:tint="@color/text_primary" />
-
-            <ImageButton
-                android:id="@+id/btnBookmark"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_bookmark_outline"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/bookmark_added"
-                app:tint="@color/text_primary" />
-
-            <ImageButton
-                android:id="@+id/btnAnnotate"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_edit"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/annotation_mode"
-                app:tint="@color/primary" />
-
-            <ImageButton
-                android:id="@+id/btnShare"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_share"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/share_pdf"
-                app:tint="@color/text_primary" />
-
-            <ImageButton
-                android:id="@+id/btnMore"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_more"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="More options"
-                app:tint="@color/text_primary" />
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/accent" />
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <!-- Annotation Toolbar (Initially Hidden) -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/annotationToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/surface"
-        app:cardCornerRadius="16dp 16dp 0dp 0dp"
-        app:cardElevation="8dp">
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="8dp">
-
-                <ImageButton
-                    android:id="@+id/btnHighlight"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_highlight"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/annotation_yellow" />
-
-                <ImageButton
-                    android:id="@+id/btnDraw"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_draw"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/annotation_red" />
-
-                <ImageButton
-                    android:id="@+id/btnTextNote"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_text"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/annotation_blue" />
-
-                <ImageButton
-                    android:id="@+id/btnEraser"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_eraser"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/text_secondary" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/divider"
-                    android:layout_marginHorizontal="8dp" />
-
-                <ImageButton
-                    android:id="@+id/btnUndo"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_undo"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/text_primary" />
-
-                <ImageButton
-                    android:id="@+id/btnSaveAnnotation"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_save"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/accent" />
-
-                <ImageButton
-                    android:id="@+id/btnCloseAnnotation"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_close"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/error" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Banner Ad at Bottom -->
-    <FrameLayout
-        android:id="@+id/adContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:minHeight="50dp"
-        android:background="@color/surface_variant" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
