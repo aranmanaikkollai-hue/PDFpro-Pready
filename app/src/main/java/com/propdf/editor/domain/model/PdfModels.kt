@@ -38,9 +38,7 @@ data class ScanPage(
     val filter: ScanFilter = ScanFilter.AUTO
 )
 
-enum class ScanFilter {
-    AUTO, COLOR, GRAYSCALE, BLACK_WHITE
-}
+enum class ScanFilter { AUTO, COLOR, GRAYSCALE, BLACK_WHITE }
 
 data class Bookmark(
     val id: Long = 0,
@@ -49,3 +47,29 @@ data class Bookmark(
     val label: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )
+
+data class PdfFile(
+    val uri: Uri,
+    val name: String,
+    val size: Long = 0,
+    val lastModified: Long = System.currentTimeMillis(),
+    val isFavorite: Boolean = false
+)
+
+enum class DevicePerformanceProfile { HIGH, MEDIUM, LOW }
+
+data class PdfAnnotation(
+    val id: Long = 0,
+    val documentUri: String,
+    val pageIndex: Int,
+    val type: AnnotationType,
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+    val color: Int,
+    val content: String? = null,
+    val createdAt: Long = System.currentTimeMillis()
+)
+
+enum class AnnotationType { HIGHLIGHT, UNDERLINE, STRIKEOUT, INK, TEXT, FREETEXT }
