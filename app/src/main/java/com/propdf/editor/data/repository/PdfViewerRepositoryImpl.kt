@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.propdf.editor.data.pdfium.PdfiumEngine
 import com.propdf.editor.domain.model.PdfDocument
+import com.propdf.editor.domain.model.PdfPage
 import com.propdf.editor.domain.repository.PdfViewerRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,4 +26,9 @@ class PdfViewerRepositoryImpl @Inject constructor(
     override fun pauseRendering() = pdfiumEngine.pauseRendering()
 
     override fun resumeRendering() = pdfiumEngine.resumeRendering()
+
+    override fun searchInDocument(query: String): List<PdfPage> {
+        // TODO: Implement text search
+        return emptyList()
+    }
 }
