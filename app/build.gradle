@@ -18,6 +18,16 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Room schema export directory
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                    "room.schemaLocation": "$projectDir/schemas".toString(),
+                    "room.incremental": "true"
+                ]
+            }
+        }
     }
 
     buildTypes {
@@ -39,7 +49,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.3'
+        kotlinCompilerExtensionVersion '1.5.5'
     }
 }
 
@@ -81,13 +91,13 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
-    // PDF Viewer - CORRECTED (was com.github.barteksc:android-pdf-viewer:3.2.0-beta.1)
+    // PDF Viewer
     implementation 'com.github.mhiew:android-pdf-viewer:3.2.0-beta.3'
 
     // PDF Operations
     implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
 
-    // OCR - CORRECTED (was cz.adaptech.android:tesseract4android:4.7.0)
+    // OCR
     implementation 'cz.adaptech.tesseract4android:tesseract4android:4.7.0'
 
     // Image Loading
