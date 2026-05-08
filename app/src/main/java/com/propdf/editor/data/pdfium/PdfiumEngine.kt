@@ -3,9 +3,8 @@ package com.propdf.editor.data.pdfium
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.ParcelFileDescriptor
-import com.propdf.editor.domain.model.PdfDocument
-import com.shockwave.pdfium.PdfDocument
+import com.propdf.editor.domain.model.PdfDocument as DomainPdfDocument
+import com.shockwave.pdfium.PdfDocument as PdfiumPdfDocument
 import com.shockwave.pdfium.PdfiumCore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,10 +15,10 @@ class PdfiumEngine @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private var pdfiumCore: PdfiumCore? = null
-    private var currentDocument: PdfDocument? = null
+    private var currentDocument: PdfiumPdfDocument? = null
     private var currentUri: Uri? = null
 
-    fun openDocument(uri: Uri): Result<PdfDocument> {
+    fun openDocument(uri: Uri): Result<DomainPdfDocument> {
         return try {
             closeDocument()
             pdfiumCore = PdfiumCore(context)
@@ -29,7 +28,7 @@ class PdfiumEngine @Inject constructor(
             currentUri = uri
             val count = pdfiumCore!!.getPageCount(currentDocument!!)
             Result.success(
-                PdfDocument(
+                DomainPdfDocument(
                     uri = uri,
                     name = uri.lastPathSegment ?: "document.pdf",
                     pageCount = count
@@ -66,7 +65,7 @@ class PdfiumEngine @Inject constructor(
 
     fun closeDocument() {
         try {
-            currentDocument?.let { pdfiumCore?.closeDocument(it) }
+            currentDocument?.let { doc -> pdfiumCore?.closeDocument(doc) }
         } catch (_: Exception) { }
         currentDocument = null
         currentUri = null
