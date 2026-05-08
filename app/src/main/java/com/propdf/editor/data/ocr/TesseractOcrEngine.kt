@@ -50,8 +50,8 @@ class TesseractOcrEngine @Inject constructor(
             do {
                 val wordText = resultIterator.getUTF8Text(TessBaseAPI.PageIteratorLevel.RIL_WORD) ?: ""
                 val wordConf = resultIterator.confidence(TessBaseAPI.PageIteratorLevel.RIL_WORD)
-                val rect = Rect()
-                resultIterator.getBoundingBox(TessBaseAPI.PageIteratorLevel.RIL_WORD, rect)
+                val boxArray = resultIterator.getBoundingBox(TessBaseAPI.PageIteratorLevel.RIL_WORD)
+                val rect = Rect(boxArray[0], boxArray[1], boxArray[2], boxArray[3])
                 words.add(OcrWord(wordText, wordConf, rect))
             } while (resultIterator.next(TessBaseAPI.PageIteratorLevel.RIL_WORD))
             resultIterator.delete()
