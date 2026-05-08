@@ -1,150 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/background">
 
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/surface"
+            app:title="Document Scanner"
+            app:titleTextColor="@color/text_primary"
+            app:navigationIcon="@drawable/ic_back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Camera Preview -->
     <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
+        android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Top Bar -->
-    <LinearLayout
+    <!-- Overlay Controls -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:background="@color/scrim">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
+        <!-- Capture Button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/ic_camera"
+            app:backgroundTint="@color/primary"
+            app:tint="@color/on_primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Flash Toggle -->
         <ImageButton
-            android:id="@+id/btnBack"
+            android:id="@+id/btnFlash"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/white" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bg_color_mode"
+            android:src="@drawable/ic_flash_off"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnCapture" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/document_scanner"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp" />
+        <!-- Gallery Button -->
+        <ImageButton
+            android:id="@+id/btnGallery"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/bg_color_mode"
+            android:src="@drawable/ic_gallery"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnCapture" />
 
+        <!-- Page Counter -->
         <TextView
             android:id="@+id/tvPageCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_page_counter"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="0 pages"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/bg_page_count"
-            android:padding="8dp 16dp"
-            android:visibility="gone" />
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+        <!-- Color Mode Selector -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardColorMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/surface_variant"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-    <!-- Capture Button -->
-    <FrameLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="120dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnCapture"
+                <ImageButton
+                    android:id="@+id/btnModeColor"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_pdf_icon"
+                    android:src="@drawable/ic_color"
+                    app:tint="@color/primary" />
+
+                <ImageButton
+                    android:id="@+id/btnModeGray"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_grayscale"
+                    app:tint="@color/text_secondary" />
+
+                <ImageButton
+                    android:id="@+id/btnModeBw"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_black_white"
+                    app:tint="@color/text_secondary" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Retake / Save Buttons -->
+        <LinearLayout
+            android:id="@+id/layoutActions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_camera"
-            app:backgroundTint="@color/white"
-            app:tint="@color/primary" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-    </FrameLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetake"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Retake"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/surface"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
-    <!-- Bottom Controls -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="16dp"
-        android:background="@color/scrim">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Save PDF"
+                android:textColor="@color/on_primary"
+                app:backgroundTint="@color/primary" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAuto"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/auto"
-            android:textSize="12sp"
-            app:cornerRadius="20dp"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:textColor="@color/white" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnColor"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/color"
-            android:textSize="12sp"
-            app:cornerRadius="20dp"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:textColor="@color/white"
-            android:alpha="0.6" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGrayscale"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/grayscale"
-            android:textSize="12sp"
-            app:cornerRadius="20dp"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:textColor="@color/white"
-            android:alpha="0.6" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBlackWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/black_white"
-            android:textSize="12sp"
-            app:cornerRadius="20dp"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:textColor="@color/white"
-            android:alpha="0.6" />
-
-    </LinearLayout>
-
-    <!-- Save Button -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/btnSavePdf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:text="@string/save_pdf"
-        android:enabled="false"
-        app:icon="@drawable/ic_save"
-        app:backgroundTint="@color/primary" />
-
-    <!-- Clear Button -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnClearAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_delete"
-        app:backgroundTint="@color/error"
-        app:tint="@color/white" />
-
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
