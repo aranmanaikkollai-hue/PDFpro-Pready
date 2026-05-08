@@ -71,11 +71,6 @@ class PdfiumEngine @Inject constructor(
         currentUri = null
     }
 
-    fun pauseRendering() {
-        // TODO: Implement if using custom rendering thread
-    }
-
-    fun resumeRendering() {
-        // TODO: Implement if using custom rendering thread
-    }
+    fun pauseRendering() {}
+    fun resumeRendering() {}
 }
