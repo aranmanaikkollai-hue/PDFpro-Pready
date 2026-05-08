@@ -71,6 +71,12 @@
     <color name="annotation_red">#FFFF5252</color>
     <color name="annotation_blue">#FF448AFF</color>
     <color name="divider">#FFE0E0E0</color>
+
+        <!-- Missing colors from latest build -->
+    <color name="info">#FF2196F3</color>
+    <color name="annotation_purple">#FF9C27B0</color>
+    <color name="annotation_orange">#FFFF9800</color>
+    <color name="annotation_green">#FF4CAF50</color>
     
     <!-- Status -->
     <color name="success">#FF4CAF50</color>
