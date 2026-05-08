@@ -17,7 +17,6 @@ class OcrRepositoryImpl @Inject constructor(
         tesseractEngine.recognize(bitmap)
 
     override suspend fun recognizeTextFromPdf(uri: Uri, pageIndex: Int): OcrResult {
-        // TODO: Render page first, then run OCR
         throw NotImplementedError("PDF page OCR not yet implemented")
     }
 }
