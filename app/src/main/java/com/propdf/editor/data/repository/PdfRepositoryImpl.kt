@@ -13,27 +13,10 @@ class PdfRepositoryImpl @Inject constructor(
     private val database: ProPDFDatabase
 ) : PdfRepository {
 
-    override fun getRecentDocuments(): Flow<List<PdfDocument>> = flow {
-        emit(emptyList())
-    }
-
-    override suspend fun insertDocument(document: PdfDocument) {
-        // TODO: Implement with DAO
-    }
-
-    override suspend fun deleteDocument(uri: String) {
-        // TODO: Implement with DAO
-    }
-
-    override fun searchDocuments(query: String): Flow<List<PdfDocument>> = flow {
-        emit(emptyList())
-    }
-
-    override suspend fun toggleFavorite(uri: String) {
-        // TODO: Implement with DAO
-    }
-
-    override fun getFavoriteDocuments(): Flow<List<PdfDocument>> = flow {
-        emit(emptyList())
-    }
+    override fun getRecentDocuments(): Flow<List<PdfDocument>> = flow { emit(emptyList()) }
+    override suspend fun insertDocument(document: PdfDocument) {}
+    override suspend fun deleteDocument(uri: String) {}
+    override fun searchDocuments(query: String): Flow<List<PdfDocument>> = flow { emit(emptyList()) }
+    override suspend fun toggleFavorite(uri: String) {}
+    override fun getFavoriteDocuments(): Flow<List<PdfDocument>> = flow { emit(emptyList()) }
 }
