@@ -5,76 +5,67 @@ import com.propdf.editor.data.local.entity.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RecentFileDao {
-    @Query("SELECT * FROM recent_files ORDER BY lastModified DESC LIMIT :limit")
-    fun getRecentFiles(limit: Int): Flow<List<RecentFileEntity>>
-
-    @Query("SELECT * FROM recent_files WHERE isFavorite = 1 ORDER BY lastModified DESC")
-    fun getFavoriteFiles(): Flow<List<RecentFileEntity>>
-
-    @Query("SELECT * FROM recent_files WHERE name LIKE '%' || :query || '%' ORDER BY lastModified DESC")
-    fun searchFiles(query: String): Flow<List<RecentFileEntity>>
+interface PdfDao {
+    @Query("SELECT * FROM pdf_documents ORDER BY lastOpened DESC")
+    fun getAll(): Flow<List<PdfEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(file: RecentFileEntity)
-
-    @Query("UPDATE recent_files SET isFavorite = :isFavorite WHERE uri = :uri")
-    suspend fun updateFavoriteStatus(uri: String, isFavorite: Boolean)
+    suspend fun insert(entity: PdfEntity)
 
     @Delete
-    suspend fun delete(file: RecentFileEntity)
+    suspend fun delete(entity: PdfEntity)
 
-    @Query("DELETE FROM recent_files WHERE lastModified < :timestamp")
-    suspend fun deleteOlderThan(timestamp: Long)
-
-    @Query("SELECT COUNT(*) FROM recent_files")
-    suspend fun getCount(): Int
+    @Query("SELECT * FROM pdf_documents WHERE name LIKE '%' || :query || '%'")
+    fun search(query: String): Flow<List<PdfEntity>>
 }
 
 @Dao
 interface BookmarkDao {
-    @Query("SELECT * FROM bookmarks WHERE pdfUri = :pdfUri ORDER BY pageNumber")
-    fun getBookmarks(pdfUri: String): Flow<List<BookmarkEntity>>
+    @Query("SELECT * FROM bookmarks WHERE documentUri = :documentUri")
+    fun getByDocument(documentUri: String): Flow<List<BookmarkEntity>>
+
+    @Insert
+    suspend fun insert(entity: BookmarkEntity)
+
+    @Query("DELETE FROM bookmarks WHERE id = :id")
+    suspend fun deleteById(id: Long)
+}
+
+@Dao
+interface RecentFileDao {
+    @Query("SELECT * FROM recent_files ORDER BY lastOpened DESC")
+    fun getAll(): Flow<List<RecentFileEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(bookmark: BookmarkEntity)
+    suspend fun insert(entity: RecentFileEntity)
 
-    @Query("DELETE FROM bookmarks WHERE id = :bookmarkId")
-    suspend fun delete(bookmarkId: Long)
-
-    @Update
-    suspend fun update(bookmark: BookmarkEntity)
+    @Query("DELETE FROM recent_files WHERE uri = :uri")
+    suspend fun deleteByUri(uri: String)
 }
 
 @Dao
 interface AnnotationDao {
-    @Query("SELECT * FROM annotations WHERE pdfUri = :pdfUri AND pageNumber = :pageNumber")
-    suspend fun getAnnotations(pdfUri: String, pageNumber: Int): List<AnnotationEntity>
+    @Query("SELECT * FROM annotations WHERE documentUri = :documentUri")
+    fun getByDocument(documentUri: String): Flow<List<AnnotationEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(annotation: AnnotationEntity)
+    @Insert
+    suspend fun insert(entity: AnnotationEntity)
 
-    @Query("DELETE FROM annotations WHERE id = :annotationId")
-    suspend fun delete(annotationId: Long)
+    @Query("DELETE FROM annotations WHERE id = :id")
+    suspend fun deleteById(id: Long)
 
     @Update
-    suspend fun update(annotation: AnnotationEntity)
-
-    @Query("DELETE FROM annotations WHERE pdfUri = :pdfUri")
-    suspend fun deleteAllForPdf(pdfUri: String)
+    suspend fun update(entity: AnnotationEntity)
 }
 
 @Dao
 interface FavoriteDao {
-    @Query("SELECT * FROM favorites ORDER BY addedAt DESC")
-    fun getAllFavorites(): Flow<List<FavoriteEntity>>
+    @Query("SELECT * FROM favorites")
+    fun getAll(): Flow<List<FavoriteEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(favorite: FavoriteEntity)
+    suspend fun insert(entity: FavoriteEntity)
 
     @Query("DELETE FROM favorites WHERE uri = :uri")
     suspend fun deleteByUri(uri: String)
-
-    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE uri = :uri)")
-    suspend fun isFavorite(uri: String): Boolean
 }
