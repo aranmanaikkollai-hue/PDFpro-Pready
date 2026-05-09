@@ -12,10 +12,19 @@ class SettingsRepositoryImpl @Inject constructor(
     private val dataStore: SettingsDataStore
 ) : SettingsRepository {
     override fun isDarkModeEnabled(): Flow<Boolean> = dataStore.darkMode
-    override suspend fun setDarkMode(enabled: Boolean) = dataStore.setDarkMode(enabled)
+    override suspend fun setDarkMode(enabled: Boolean) {
+        dataStore.setDarkMode(enabled)
+    }
+
     override fun isLowMemoryModeEnabled(): Flow<Boolean> = dataStore.lowMemoryMode
-    override suspend fun setLowMemoryMode(enabled: Boolean) = dataStore.setLowMemoryMode(enabled)
+    override suspend fun setLowMemoryMode(enabled: Boolean) {
+        dataStore.setLowMemoryMode(enabled)
+    }
+
     override fun getDefaultAnnotationColor(): Flow<Int> = dataStore.annotationColor
-    override suspend fun setDefaultAnnotationColor(color: Int) = dataStore.setAnnotationColor(color)
+    override suspend fun setDefaultAnnotationColor(color: Int) {
+        dataStore.setAnnotationColor(color)
+    }
+
     override fun getPerformanceProfile(): Flow<DevicePerformanceProfile> = dataStore.performanceProfile
 }
