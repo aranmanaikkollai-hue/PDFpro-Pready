@@ -9,14 +9,16 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface">
+        android:background="@color/surface"
+        app:elevation="4dp">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="@color/text_primary" />
+            app:titleTextColor="@color/text_primary"
+            app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -30,79 +32,117 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Quick Actions -->
+            <!-- Quick Actions Grid -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/quick_actions"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_marginBottom="12dp" />
 
-            <LinearLayout
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:columnCount="2"
+                android:useDefaultMargins="true">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnOpenPdf"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="80dp"
+                    android:layout_columnWeight="1"
                     android:text="@string/open_pdf"
-                    android:textColor="@color/text_on_primary"
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/ic_back"
+                    app:iconGravity="textTop"
+                    app:iconSize="32dp"
+                    app:cornerRadius="16dp"
                     app:backgroundTint="@color/primary" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnScan"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="4dp"
+                    android:layout_height="80dp"
+                    android:layout_columnWeight="1"
                     android:text="@string/scan_document"
-                    android:textColor="@color/text_on_primary"
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/ic_camera"
+                    app:iconGravity="textTop"
+                    app:iconSize="32dp"
+                    app:cornerRadius="16dp"
                     app:backgroundTint="@color/accent" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTools"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="80dp"
+                    android:layout_columnWeight="1"
                     android:text="@string/pdf_tools"
-                    android:textColor="@color/text_on_primary"
-                    app:backgroundTint="@color/primary" />
-            </LinearLayout>
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/ic_color"
+                    app:iconGravity="textTop"
+                    app:iconSize="32dp"
+                    app:cornerRadius="16dp"
+                    app:backgroundTint="@color/secondary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSettings"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_columnWeight="1"
+                    android:text="@string/settings"
+                    android:textColor="@color/on_primary"
+                    app:icon="@drawable/ic_grayscale"
+                    app:iconGravity="textTop"
+                    app:iconSize="32dp"
+                    app:cornerRadius="16dp"
+                    app:backgroundTint="@color/surface_variant" />
+            </GridLayout>
 
             <!-- Recent Files -->
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/recent_files"
+                    android:textColor="@color/text_primary"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/recent_files"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp" />
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="200dp" />
+                android:minHeight="200dp"
+                android:clipToPadding="false" />
 
             <TextView
                 android:id="@+id/tvEmpty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="48dp"
                 android:text="@string/no_recent_files"
                 android:textColor="@color/text_hint"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:visibility="gone" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
