@@ -121,8 +121,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // OpenCV for document scanner
-    implementation 'org.opencv:opencv-android:4.9.0'
+     // OpenCV for document scanner (QuickBird Studios fork - available on Maven Central)
+    implementation 'com.quickbirdstudios:opencv:4.5.3.0'
     
     // WorkManager for background PDF processing
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
