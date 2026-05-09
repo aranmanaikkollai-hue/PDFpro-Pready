@@ -4,7 +4,6 @@ import android.net.Uri
 import com.propdf.editor.data.local.dao.FavoriteDao
 import com.propdf.editor.data.local.dao.PdfDao
 import com.propdf.editor.data.local.dao.RecentFileDao
-import com.propdf.editor.data.local.entity.FavoriteEntity
 import com.propdf.editor.data.local.entity.PdfEntity
 import com.propdf.editor.data.local.entity.RecentFileEntity
 import com.propdf.editor.domain.model.PdfDocument
@@ -22,10 +21,19 @@ class PdfRepositoryImpl @Inject constructor(
 ) : PdfRepository {
 
     override fun getRecentDocuments(): Flow<List<PdfDocument>> =
-        recentFileDao.getAll().map { list -> list.map { it.toDomain() } }
+        recentFileDao.getAll().map { list ->
+            list.map { entity ->
+                PdfDocument(
+                    Uri.parse(entity.uri),
+                    entity.name,
+                    0,
+                    lastOpened = entity.lastOpened
+                )
+            }
+        }
 
     override suspend fun insertDocument(document: PdfDocument) {
-        pdfDao.insert(document.toEntity())
+        pdfDao.insert(PdfEntity(document.uri.toString(), document.name, document.pageCount, document.lastOpened))
         recentFileDao.insert(RecentFileEntity(document.uri.toString(), document.name, document.lastOpened))
     }
 
@@ -36,10 +44,19 @@ class PdfRepositoryImpl @Inject constructor(
     }
 
     override fun searchDocuments(query: String): Flow<List<PdfDocument>> =
-        pdfDao.search(query).map { list -> list.map { it.toDomain() } }
+        pdfDao.search(query).map { list ->
+            list.map { entity ->
+                PdfDocument(
+                    Uri.parse(entity.uri),
+                    entity.name,
+                    entity.pageCount,
+                    lastOpened = entity.lastOpened
+                )
+            }
+        }
 
     override suspend fun toggleFavorite(uri: String) {
-        // TODO: Implement proper toggle with existence check
+        // TODO: Implement proper toggle with existence check via DAO
     }
 
     override fun getFavoriteDocuments(): Flow<List<PdfDocument>> =
@@ -53,10 +70,4 @@ class PdfRepositoryImpl @Inject constructor(
                 )
             }
         }
-
-    private fun RecentFileEntity.toDomain(): PdfDocument =
-        PdfDocument(Uri.parse(uri), name, 0, lastOpened = lastOpened)
-
-    private fun PdfDocument.toEntity(): PdfEntity =
-        PdfEntity(uri.toString(), name, pageCount, lastOpened)
 }
