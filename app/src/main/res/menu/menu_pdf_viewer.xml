@@ -5,24 +5,23 @@
     <item
         android:id="@+id/action_search"
         android:title="@string/search_pdf"
-        android:icon="@drawable/ic_search"
+        android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_bookmark"
         android:title="@string/bookmark_added"
-        android:icon="@drawable/ic_bookmark_outline"
+        android:icon="@android:drawable/btn_star"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_share"
         android:title="@string/share_pdf"
-        android:icon="@drawable/ic_share"
+        android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_properties"
         android:title="@string/action_properties"
         app:showAsAction="never" />
-
 </menu>
