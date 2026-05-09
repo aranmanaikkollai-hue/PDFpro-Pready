@@ -35,36 +35,27 @@ class PdfViewerViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
-            val result = pdfViewerRepository.openDocument(uri)
-            result.fold(
+            pdfViewerRepository.openDocument(uri).fold(
                 onSuccess = { doc ->
                     _document.value = doc
                     _pageCount.value = doc.pageCount
                     _currentPage.value = 0
                 },
-                onFailure = { e ->
-                    _error.value = e.message
-                }
+                onFailure = { e -> _error.value = e.message }
             )
             _isLoading.value = false
         }
     }
 
     fun goToPage(page: Int) {
-        if (page in 0 until _pageCount.value) {
-            _currentPage.value = page
-        }
+        if (page in 0 until _pageCount.value) _currentPage.value = page
     }
 
     fun searchInDocument(query: String) {
-        viewModelScope.launch {
-            pdfViewerRepository.searchInDocument(query)
-        }
+        viewModelScope.launch { pdfViewerRepository.searchInDocument(query) }
     }
 
-    fun closeDocument() {
-        pdfViewerRepository.closeDocument()
-    }
+    fun closeDocument() = pdfViewerRepository.closeDocument()
 
     override fun onCleared() {
         super.onCleared()
