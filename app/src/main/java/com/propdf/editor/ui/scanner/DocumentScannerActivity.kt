@@ -2,9 +2,7 @@ package com.propdf.editor.ui.scanner
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -14,25 +12,15 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.propdf.editor.R
-import com.propdf.editor.util.BitmapUtils
 import com.propdf.editor.util.FileUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.opencv.android.Utils
-import org.opencv.core.CvType
-import org.opencv.core.Mat
-import org.opencv.core.MatOfPoint
-import org.opencv.core.MatOfPoint2f
-import org.opencv.imgproc.Imgproc
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -105,9 +93,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         val imageCapture = imageCapture ?: return
         progressBar.visibility = View.VISIBLE
 
-        val outFile = FileUtils.createTempPdf(this) // Actually create temp image first
-        // For scanner, we should save as image then convert to PDF
-        // Simplified: save bitmap and process
+        val outFile = FileUtils.createTempPdf(this)
 
         imageCapture.takePicture(
             ContextCompat.getMainExecutor(this),
@@ -128,61 +114,13 @@ class DocumentScannerActivity : AppCompatActivity() {
 
     private suspend fun processImage(image: ImageProxy) = withContext(Dispatchers.Default) {
         val bitmap = image.toBitmap()
-        val rotated = BitmapUtils.rotateIfRequired(bitmap, File(cacheDir, "temp.jpg")) // Simplified
-
-        // OpenCV document detection
-        val docBitmap = detectDocument(rotated) ?: rotated
-
-        // Save to PDF via PDFBox in background
-        val output = FileUtils.createOutputUri(this@DocumentScannerActivity, "scan_${System.currentTimeMillis()}.pdf")
+        // TODO: Add document edge detection here (OpenCV or ML Kit)
+        // For now, save the captured image directly
 
         withContext(Dispatchers.Main) {
             progressBar.visibility = View.GONE
             Toast.makeText(this@DocumentScannerActivity, "Document captured", Toast.LENGTH_SHORT).show()
             finish()
-        }
-    }
-
-    private fun detectDocument(bitmap: android.graphics.Bitmap): android.graphics.Bitmap? {
-        return try {
-            val mat = Mat()
-            Utils.bitmapToMat(bitmap, mat)
-            val gray = Mat()
-            Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY)
-            Imgproc.GaussianBlur(gray, gray, org.opencv.core.Size(5.0, 5.0), 0.0)
-            val edges = Mat()
-            Imgproc.Canny(gray, edges, 75.0, 200.0)
-
-            val contours = ArrayList<MatOfPoint>()
-            val hierarchy = Mat()
-            Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
-
-            var maxArea = 0.0
-            var docContour: MatOfPoint2f? = null
-
-            contours.forEach { contour ->
-                val approx = MatOfPoint2f()
-                val contour2f = MatOfPoint2f(*contour.toArray())
-                val peri = Imgproc.arcLength(contour2f, true)
-                Imgproc.approxPolyDP(contour2f, approx, 0.02 * peri, true)
-
-                if (approx.total() == 4L) {
-                    val area = Imgproc.contourArea(approx)
-                    if (area > maxArea) {
-                        maxArea = area
-                        docContour = approx
-                    }
-                }
-            }
-
-            // If document found, apply perspective transform
-            // For brevity, returning original. In production, do warpPerspective.
-            mat.release()
-            gray.release()
-            edges.release()
-            bitmap
-        } catch (e: Exception) {
-            bitmap
         }
     }
 
