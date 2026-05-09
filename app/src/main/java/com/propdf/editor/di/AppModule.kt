@@ -30,8 +30,15 @@ abstract class AppModule {
 
     companion object {
         @Provides @Singleton
-        fun provideProPDFDatabase(@ApplicationContext context: Context): ProPDFDatabase =
-            Room.databaseBuilder(context, ProPDFDatabase::class.java, "propdf_database").build()
+        fun provideProPDFDatabase(@ApplicationContext context: Context): ProPDFDatabase {
+            return Room.databaseBuilder(
+                context,
+                ProPDFDatabase::class.java,
+                "propdf_database"
+            )
+            .fallbackToDestructiveMigration()
+            .build()
+        }
 
         @Provides @Singleton
         fun providePdfiumEngine(@ApplicationContext context: Context): PdfiumEngine = PdfiumEngine(context)
