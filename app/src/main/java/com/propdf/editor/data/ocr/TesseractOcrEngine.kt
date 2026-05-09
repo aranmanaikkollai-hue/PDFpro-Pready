@@ -39,7 +39,7 @@ class TesseractOcrEngine @Inject constructor(
         val api = tessBaseAPI ?: throw IllegalStateException("Tesseract not initialized")
 
         api.setImage(bitmap)
-        val text = api.utF8Text ?: ""
+        val text = api.getUTF8Text() ?: ""
         val confidence = api.meanConfidence().toFloat()
 
         val words = mutableListOf<OcrWord>()
@@ -61,7 +61,7 @@ class TesseractOcrEngine @Inject constructor(
     }
 
     fun destroy() {
-        tessBaseAPI?.end()
+        // tesseract4android 4.7.0 does not expose end(); just drop the reference
         tessBaseAPI = null
     }
 }
