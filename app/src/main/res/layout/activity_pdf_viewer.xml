@@ -1,79 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
-    <!-- Top toolbar -->
-    <LinearLayout
-        android:id="@+id/topToolbar"
-        android:layout_width="0dp"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/surface">
 
-        <Button android:id="@+id/btnBookmark" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bookmark"/>
-        <Button android:id="@+id/btnAnnotate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Annotate"/>
-        <Button android:id="@+id/btnShare"     android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Share"/>
-        <Button android:id="@+id/btnMore"      android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="More"/>
-    </LinearLayout>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/text_primary">
 
-    <!-- PDF content placeholder -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tvPageCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <FrameLayout
-        android:id="@+id/pdfContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topToolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <!-- Ad container -->
-    <FrameLayout
-        android:id="@+id/adContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/pdfView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <!-- Bottom toolbar -->
+        <com.propdf.editor.ui.viewer.annotation.AnnotationOverlayView
+            android:id="@+id/annotationOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Annotation Toolbar -->
     <LinearLayout
-        android:id="@+id/bottomToolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/annotationBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="@color/surface"
+        android:elevation="8dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tvPageCount"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHighlight"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="0 / 0" />
+            android:text="Highlight"
+            android:textColor="@color/text_primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPen"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pen"
+            android:textColor="@color/text_primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnText"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Text"
+            android:textColor="@color/text_primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnErase"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear"
+            android:textColor="@color/error" />
     </LinearLayout>
 
-    <!-- Annotation toolbar (overlays bottom) -->
-    <LinearLayout
-        android:id="@+id/annotationToolbar"
-        android:layout_width="0dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAnnotate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button android:id="@+id/btnDraw"           android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Draw"/>
-        <Button android:id="@+id/btnTextNote"       android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Text"/>
-        <Button android:id="@+id/btnEraser"         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Eraser"/>
-        <Button android:id="@+id/btnUndo"           android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Undo"/>
-        <Button android:id="@+id/btnSaveAnnotation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save"/>
-        <Button android:id="@+id/btnCloseAnnotation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Close"/>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/annotate"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        app:backgroundTint="@color/accent" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
