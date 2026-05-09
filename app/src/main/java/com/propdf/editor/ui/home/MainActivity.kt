@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: PdfFileAdapter
 
     private val requestPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
-        if (results.values.any { it }) loadRecentFiles()
+        if (results.values.any { it }) loadRecent()
     }
 
     private val openPdfLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
