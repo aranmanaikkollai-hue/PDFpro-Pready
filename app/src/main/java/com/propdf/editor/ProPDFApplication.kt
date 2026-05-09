@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
-import org.opencv.android.OpenCVLoader
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -14,7 +13,7 @@ class ProPDFApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        OpenCVLoader.initLocal()
+        // OpenCV removed for now - can be added via local AAR later
     }
 
     override val workManagerConfiguration: Configuration
