@@ -39,19 +39,17 @@ class PdfRepositoryImpl @Inject constructor(
         pdfDao.search(query).map { list -> list.map { it.toDomain() } }
 
     override suspend fun toggleFavorite(uri: String) {
-        // Simplified toggle - check current state and add/remove
-        val current = favoriteDao.getAll()
-        // In production, use a direct query to check existence
+        // TODO: Implement proper toggle with existence check
     }
 
     override fun getFavoriteDocuments(): Flow<List<PdfDocument>> =
         favoriteDao.getAll().map { list ->
-            list.map {
+            list.map { entity ->
                 PdfDocument(
-                    Uri.parse(it.uri),
-                    it.name,
+                    Uri.parse(entity.uri),
+                    entity.name,
                     0,
-                    lastOpened = it.addedAt
+                    lastOpened = entity.addedAt
                 )
             }
         }
