@@ -14,9 +14,7 @@ import com.tom_roush.pdfbox.pdmodel.common.PDRectangle
 import com.tom_roush.pdfbox.pdmodel.encryption.AccessPermission
 import com.tom_roush.pdfbox.pdmodel.encryption.StandardProtectionPolicy
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
-import com.tom_roush.pdfbox.pdmodel.graphics.image.JPEGFactory
 import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject
-import com.tom_roush.pdfbox.rendering.PDFRenderer
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +45,7 @@ class PdfBoxOperations @Inject constructor(
                 }
                 context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                     FileOutputStream(pfd.fileDescriptor).use { out -> merged.save(out) }
-                }
+                } ?: throw IllegalStateException("Cannot open output")
             }
         }
     }
@@ -64,7 +62,7 @@ class PdfBoxOperations @Inject constructor(
                         }
                         context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                             FileOutputStream(pfd.fileDescriptor).use { out -> split.save(out) }
-                        }
+                        } ?: throw IllegalStateException("Cannot open output")
                     }
                 }
             } ?: throw IllegalStateException("Cannot open source")
@@ -75,13 +73,10 @@ class PdfBoxOperations @Inject constructor(
         runCatching {
             context.contentResolver.openInputStream(source)?.use { input ->
                 PDDocument.load(input).use { doc ->
-                    // Remove unused objects and compress images
                     doc.isAllSecurityToBeRemoved = true
                     context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
-                        FileOutputStream(pfd.fileDescriptor).use { out ->
-                            doc.save(out)
-                        }
-                    }
+                        FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
+                    } ?: throw IllegalStateException("Cannot open output")
                 }
             } ?: throw IllegalStateException("Cannot open source")
         }
@@ -99,7 +94,7 @@ class PdfBoxOperations @Inject constructor(
                     }
                     context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                         FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
-                    }
+                    } ?: throw IllegalStateException("Cannot open output")
                 }
             } ?: throw IllegalStateException("Cannot open source")
         }
@@ -113,7 +108,7 @@ class PdfBoxOperations @Inject constructor(
                     toDelete.forEach { doc.removePage(it) }
                     context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                         FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
-                    }
+                    } ?: throw IllegalStateException("Cannot open output")
                 }
             } ?: throw IllegalStateException("Cannot open source")
         }
@@ -136,7 +131,7 @@ class PdfBoxOperations @Inject constructor(
                     }
                     context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                         FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
-                    }
+                    } ?: throw IllegalStateException("Cannot open output")
                 }
             } ?: throw IllegalStateException("Cannot open source")
         }
@@ -154,7 +149,7 @@ class PdfBoxOperations @Inject constructor(
                     doc.protect(policy)
                     context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                         FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
-                    }
+                    } ?: throw IllegalStateException("Cannot open output")
                 }
             } ?: throw IllegalStateException("Cannot open source")
         }
@@ -168,18 +163,17 @@ class PdfBoxOperations @Inject constructor(
                         val bitmap = android.graphics.BitmapFactory.decodeStream(input)
                         val page = PDPage(PDRectangle.A4)
                         doc.addPage(page)
-                        PDImageXObject.createFromByteArray(doc, bitmapToBytes(bitmap), "image").let { img ->
-                            PDPageContentStream(doc, page).use { stream ->
-                                val scale = 0.5f
-                                stream.drawImage(img, 50f, 50f, img.width * scale, img.height * scale)
-                            }
+                        val img = PDImageXObject.createFromByteArray(doc, bitmapToBytes(bitmap), "image")
+                        PDPageContentStream(doc, page).use { stream ->
+                            val scale = 0.5f
+                            stream.drawImage(img, 50f, 50f, img.width * scale, img.height * scale)
                         }
                         bitmap.recycle()
                     }
                 }
                 context.contentResolver.openFileDescriptor(output, "w")?.use { pfd ->
                     FileOutputStream(pfd.fileDescriptor).use { out -> doc.save(out) }
-                }
+                } ?: throw IllegalStateException("Cannot open output")
             }
         }
     }
