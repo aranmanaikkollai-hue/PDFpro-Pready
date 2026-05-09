@@ -1,84 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Theme Colors -->
-    <color name="primary">#FF6750A4</color>
-    <color name="on_primary">#FFFFFFFF</color>
-    <color name="primary_container">#FFEADDFF</color>
-    <color name="on_primary_container">#FF21005D</color>
-
-    <color name="secondary">#FF625B71</color>
-    <color name="on_secondary">#FFFFFFFF</color>
-    <color name="secondary_container">#FFE8DEF8</color>
-    <color name="on_secondary_container">#FF1D192B</color>
-
-    <color name="tertiary">#FF7D5260</color>
-    <color name="on_tertiary">#FFFFFFFF</color>
-    <color name="tertiary_container">#FFFFD8E4</color>
-    <color name="on_tertiary_container">#FF31111D</color>
-
-    <color name="error">#FFB3261E</color>
-    <color name="on_error">#FFFFFFFF</color>
-    <color name="error_container">#FFF9DEDC</color>
-    <color name="on_error_container">#FF410E0B</color>
-
-    <color name="background">#FFFFFBFE</color>
-    <color name="on_background">#FF1C1B1F</color>
-    <color name="surface">#FFFFFBFE</color>
-    <color name="on_surface">#FF1C1B1F</color>
-    <color name="surface_variant">#FFE7E0EC</color>
-    <color name="on_surface_variant">#FF49454F</color>
-    <color name="outline">#FF79747E</color>
-    <color name="outline_variant">#FFCAC4D0</color>
-
-    <color name="scrim">#FF000000</color>
-    <color name="shadow">#FF000000</color>
-
-    <!-- Text Colors -->
-    <color name="text_primary">#FF1C1B1F</color>
-    <color name="text_secondary">#FF49454F</color>
-    <color name="text_on_primary">#FFFFFFFF</color>
-    <color name="text_on_surface">#FF1C1B1F</color>
-
-    <!-- Legacy Colors (referenced by themes.xml) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_500">#FF018786</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!-- Neutral -->
-    <color name="gray_100">#FFF5F5F5</color>
-    <color name="gray_300">#FFE0E0E0</color>
-    <color name="gray_500">#FF9E9E9E</color>
-    <color name="gray_700">#FF616161</color>
-    <color name="gray_900">#FF212121</color>
-
-    <!-- PDF Viewer -->
-    <color name="pdf_background">#FF1A1A1A</color>
-    <color name="pdf_page_background">#FFFFFFFF</color>
-    <color name="highlight_yellow">#FFFFFF00</color>
-    <color name="highlight_green">#FF00FF00</color>
-    <color name="highlight_blue">#FF0000FF</color>
-    <color name="highlight_red">#FFFF0000</color>
-   
-    <!-- Missing colors from latest build -->
-    <color name="accent">#FF6750A4</color>
-    <color name="text_hint">#FF9E9E9E</color>
-    <color name="annotation_yellow">#FFFFEB3B</color>
-    <color name="annotation_red">#FFFF5252</color>
-    <color name="annotation_blue">#FF448AFF</color>
-    <color name="divider">#FFE0E0E0</color>
-
-        <!-- Missing colors from latest build -->
-    <color name="info">#FF2196F3</color>
-    <color name="annotation_purple">#FF9C27B0</color>
-    <color name="annotation_orange">#FFFF9800</color>
-    <color name="annotation_green">#FF4CAF50</color>
-    
-    <!-- Status -->
-    <color name="success">#FF4CAF50</color>
-    <color name="warning">#FFFFA726</color>
 </resources>
