@@ -15,17 +15,17 @@ import java.io.File
 @AndroidEntryPoint
 class DocumentScannerActivity : AppCompatActivity() {
 
-    private lateinit var btnCapture: View
-    private lateinit var btnSave: View
-    private lateinit var btnClear: View
-    private lateinit var btnAuto: View
-    private lateinit var btnColor: View
-    private lateinit var btnGrayscale: View
-    private lateinit var btnBlackWhite: View
-    private lateinit var rvPages: RecyclerView
-    private lateinit var tvPageCount: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var previewView: PreviewView
+    private var btnCapture: View? = null
+    private var btnSave: View? = null
+    private var btnClear: View? = null
+    private var btnAuto: View? = null
+    private var btnColor: View? = null
+    private var btnGrayscale: View? = null
+    private var btnBlackWhite: View? = null
+    private var rvPages: RecyclerView? = null
+    private var tvPageCount: TextView? = null
+    private var progressBar: ProgressBar? = null
+    private var previewView: PreviewView? = null
 
     private val outputDir by lazy { File(cacheDir, "scans").apply { mkdirs() } }
 
@@ -51,14 +51,14 @@ class DocumentScannerActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        btnCapture.setOnClickListener { }
-        btnSave.setOnClickListener {
+        btnCapture?.setOnClickListener { }
+        btnSave?.setOnClickListener {
             val uri = Uri.fromFile(File(outputDir, "scan_${System.currentTimeMillis()}.pdf"))
         }
-        btnClear.setOnClickListener { rvPages.adapter = null; tvPageCount.text = "0" }
-        btnAuto.setOnClickListener { }
-        btnColor.setOnClickListener { }
-        btnGrayscale.setOnClickListener { }
-        btnBlackWhite.setOnClickListener { }
+        btnClear?.setOnClickListener { rvPages?.adapter = null; tvPageCount?.text = "0" }
+        btnAuto?.setOnClickListener { }
+        btnColor?.setOnClickListener { }
+        btnGrayscale?.setOnClickListener { }
+        btnBlackWhite?.setOnClickListener { }
     }
 }
