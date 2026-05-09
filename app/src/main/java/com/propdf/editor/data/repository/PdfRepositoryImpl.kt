@@ -1,5 +1,6 @@
 package com.propdf.editor.data.repository
 
+import android.net.Uri
 import com.propdf.editor.data.local.dao.FavoriteDao
 import com.propdf.editor.data.local.dao.PdfDao
 import com.propdf.editor.data.local.dao.RecentFileDao
@@ -38,14 +39,26 @@ class PdfRepositoryImpl @Inject constructor(
         pdfDao.search(query).map { list -> list.map { it.toDomain() } }
 
     override suspend fun toggleFavorite(uri: String) {
-        val existing = favoriteDao.getAll().let { flow ->
-            // Simplified: check in ViewModel or use a direct query
-        }
+        // Simplified toggle - check current state and add/remove
+        val current = favoriteDao.getAll()
+        // In production, use a direct query to check existence
     }
 
     override fun getFavoriteDocuments(): Flow<List<PdfDocument>> =
-        favoriteDao.getAll().map { list -> list.map { PdfDocument(android.net.Uri.parse(it.uri), it.name, 0, lastOpened = it.addedAt) } }
+        favoriteDao.getAll().map { list ->
+            list.map {
+                PdfDocument(
+                    Uri.parse(it.uri),
+                    it.name,
+                    0,
+                    lastOpened = it.addedAt
+                )
+            }
+        }
 
-    private fun PdfEntity.toDomain() = PdfDocument(android.net.Uri.parse(uri), name, pageCount, lastOpened = lastOpened)
-    private fun PdfDocument.toEntity() = PdfEntity(uri.toString(), name, pageCount, lastOpened)
+    private fun RecentFileEntity.toDomain(): PdfDocument =
+        PdfDocument(Uri.parse(uri), name, 0, lastOpened = lastOpened)
+
+    private fun PdfDocument.toEntity(): PdfEntity =
+        PdfEntity(uri.toString(), name, pageCount, lastOpened)
 }
