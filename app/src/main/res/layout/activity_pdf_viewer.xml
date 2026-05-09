@@ -1,90 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
-    <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdfView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!-- Top Bar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
+    <!-- Top toolbar -->
+    <LinearLayout
+        android:id="@+id/topToolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/scrim">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/scrim"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_back" />
+        <Button android:id="@+id/btnBookmark" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bookmark"/>
+        <Button android:id="@+id/btnAnnotate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Annotate"/>
+        <Button android:id="@+id/btnShare"     android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Share"/>
+        <Button android:id="@+id/btnMore"      android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="More"/>
+    </LinearLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    <!-- PDF content placeholder -->
+    <FrameLayout
+        android:id="@+id/pdfContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topToolbar" />
 
-    <!-- Bottom Annotation Bar -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
+    <!-- Ad container -->
+    <FrameLayout
+        android:id="@+id/adContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="@color/surface"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp">
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <!-- Bottom toolbar -->
+    <LinearLayout
+        android:id="@+id/bottomToolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvPageCount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp">
+            android:padding="16dp"
+            android:text="0 / 0" />
+    </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnHighlight"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_color"
-                app:tint="@color/annotation_yellow" />
+    <!-- Annotation toolbar (overlays bottom) -->
+    <LinearLayout
+        android:id="@+id/annotationToolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
-                android:id="@+id/btnDrawRed"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_color"
-                app:tint="@color/annotation_red" />
-
-            <ImageButton
-                android:id="@+id/btnDrawBlue"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_color"
-                app:tint="@color/annotation_blue" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="32dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="@color/divider" />
-
-            <ImageButton
-                android:id="@+id/btnSearch"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/accent" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <Button android:id="@+id/btnDraw"           android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Draw"/>
+        <Button android:id="@+id/btnTextNote"       android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Text"/>
+        <Button android:id="@+id/btnEraser"         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Eraser"/>
+        <Button android:id="@+id/btnUndo"           android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Undo"/>
+        <Button android:id="@+id/btnSaveAnnotation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save"/>
+        <Button android:id="@+id/btnCloseAnnotation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Close"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
