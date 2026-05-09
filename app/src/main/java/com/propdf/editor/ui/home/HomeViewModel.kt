@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getRecentFiles: GetRecentFilesUseCase,
-    private val addRecentFile: AddRecentFileUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase
+    private val getRecentFilesUseCase: GetRecentFilesUseCase,
+    private val addRecentFileUseCase: AddRecentFileUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
 ) : ViewModel() {
 
     private val _recentFiles = MutableStateFlow<List<PdfFile>>(emptyList())
@@ -27,21 +27,21 @@ class HomeViewModel @Inject constructor(
     private fun loadRecent() {
         viewModelScope.launch {
             _isLoading.value = true
-            getRecent().collect { _recentFiles.value = it }
+            getRecentFilesUseCase().collect { _recentFiles.value = it }
             _isLoading.value = false
         }
     }
 
     fun addRecentFile(file: PdfFile) {
         viewModelScope.launch {
-            addRecentFile(file)
+            addRecentFileUseCase(file)
             loadRecent()
         }
     }
 
     fun toggleFavorite(uri: String) {
         viewModelScope.launch {
-            toggleFavorite(uri)
+            toggleFavoriteUseCase(uri)
             loadRecent()
         }
     }
