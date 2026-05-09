@@ -32,7 +32,6 @@ class DocumentScannerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_document_scanner)
-
         initViews()
         setupListeners()
     }
@@ -52,35 +51,14 @@ class DocumentScannerActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        btnCapture.setOnClickListener { captureDocument() }
-        btnSave.setOnClickListener { saveDocument() }
-        btnClear.setOnClickListener { clearPages() }
-        btnAuto.setOnClickListener { applyFilter(ScanFilter.AUTO) }
-        btnColor.setOnClickListener { applyFilter(ScanFilter.COLOR) }
-        btnGrayscale.setOnClickListener { applyFilter(ScanFilter.GRAYSCALE) }
-        btnBlackWhite.setOnClickListener { applyFilter(ScanFilter.BLACK_WHITE) }
-    }
-
-    private fun captureDocument() {
-        progressBar.visibility = View.VISIBLE
-        // TODO: Implement camera capture
-    }
-
-    private fun saveDocument() {
-        val uri = Uri.fromFile(File(outputDir, "scan_${System.currentTimeMillis()}.pdf"))
-        // TODO: Implement save logic using uri
-    }
-
-    private fun clearPages() {
-        rvPages.adapter = null
-        tvPageCount.text = "0"
-    }
-
-    private fun applyFilter(filter: ScanFilter) {
-        // TODO: Implement filter
-    }
-
-    enum class ScanFilter {
-        AUTO, COLOR, GRAYSCALE, BLACK_WHITE
+        btnCapture.setOnClickListener { }
+        btnSave.setOnClickListener {
+            val uri = Uri.fromFile(File(outputDir, "scan_${System.currentTimeMillis()}.pdf"))
+        }
+        btnClear.setOnClickListener { rvPages.adapter = null; tvPageCount.text = "0" }
+        btnAuto.setOnClickListener { }
+        btnColor.setOnClickListener { }
+        btnGrayscale.setOnClickListener { }
+        btnBlackWhite.setOnClickListener { }
     }
 }
