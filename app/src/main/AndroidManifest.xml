@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.propdf.editor">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,58 +8,30 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
     <application
         android:name=".ProPDFApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PDFproPready"
-        tools:targetApi="34">
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+        android:theme="@style/Theme.ProPDFEditor"
+        android:requestLegacyExternalStorage="true">
 
         <activity
             android:name=".ui.home.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.PDFproPready.Splash">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.viewer.PdfViewerActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
-
-        <activity
-            android:name=".ui.tools.ToolsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.scanner.DocumentScannerActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.settings.OpenSourceLicensesActivity"
-            android:exported="false" />
+        <activity android:name=".ui.viewer.PdfViewerActivity" />
+        <activity android:name=".ui.scanner.DocumentScannerActivity" />
+        <activity android:name=".ui.tools.ToolsActivity" />
+        <activity android:name=".ui.settings.SettingsActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -71,6 +43,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- AdMob App ID (replace with your actual ID) -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
     </application>
-
 </manifest>
