@@ -1,27 +1,72 @@
-package com.propdf.editor.data.local.db
+package com.propdf.editor.di
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import android.content.Context
+import androidx.room.Room
 import com.propdf.editor.data.local.dao.*
-import com.propdf.editor.data.local.entity.*
+import com.propdf.editor.data.local.db.ProPDFDatabase
+import com.propdf.editor.data.local.prefs.SettingsDataStore
+import com.propdf.editor.data.ocr.TesseractOcrEngine
+import com.propdf.editor.data.pdfium.PdfiumEngine
+import com.propdf.editor.data.repository.*
+import com.propdf.editor.domain.repository.*
+import com.propdf.editor.pdf.PdfBoxOperations
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-@Database(
-    entities = [
-        PdfEntity::class,
-        BookmarkEntity::class,
-        RecentFileEntity::class,
-        AnnotationEntity::class,
-        FavoriteEntity::class
-    ],
-    version = 1,
-    exportSchema = false
-)
-@TypeConverters(Converters::class)
-abstract class ProPDFDatabase : RoomDatabase() {
-    abstract fun pdfDao(): PdfDao
-    abstract fun bookmarkDao(): BookmarkDao
-    abstract fun recentFileDao(): RecentFileDao
-    abstract fun annotationDao(): AnnotationDao
-    abstract fun favoriteDao(): FavoriteDao
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class AppModule {
+
+    @Binds @Singleton abstract fun bindPdfViewerRepository(impl: PdfViewerRepositoryImpl): PdfViewerRepository
+    @Binds @Singleton abstract fun bindOcrRepository(impl: OcrRepositoryImpl): OcrRepository
+    @Binds @Singleton abstract fun bindPdfRepository(impl: PdfRepositoryImpl): PdfRepository
+    @Binds @Singleton abstract fun bindBookmarkRepository(impl: BookmarkRepositoryImpl): BookmarkRepository
+    @Binds @Singleton abstract fun bindAnnotationRepository(impl: AnnotationRepositoryImpl): AnnotationRepository
+    @Binds @Singleton abstract fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
+    @Binds @Singleton abstract fun bindPdfOperationsRepository(impl: PdfBoxOperations): PdfOperationsRepository
+
+    companion object {
+        @Provides @Singleton
+        fun provideProPDFDatabase(@ApplicationContext context: Context): ProPDFDatabase {
+            return Room.databaseBuilder(
+                context,
+                ProPDFDatabase::class.java,
+                "propdf_database"
+            )
+            .fallbackToDestructiveMigration()
+            .build()
+        }
+
+        @Provides @Singleton
+        fun providePdfDao(db: ProPDFDatabase): PdfDao = db.pdfDao()
+
+        @Provides @Singleton
+        fun provideRecentFileDao(db: ProPDFDatabase): RecentFileDao = db.recentFileDao()
+
+        @Provides @Singleton
+        fun provideFavoriteDao(db: ProPDFDatabase): FavoriteDao = db.favoriteDao()
+
+        @Provides @Singleton
+        fun provideBookmarkDao(db: ProPDFDatabase): BookmarkDao = db.bookmarkDao()
+
+        @Provides @Singleton
+        fun provideAnnotationDao(db: ProPDFDatabase): AnnotationDao = db.annotationDao()
+
+        @Provides @Singleton
+        fun provideSettingsDataStore(@ApplicationContext context: Context): SettingsDataStore =
+            SettingsDataStore(context)
+
+        @Provides @Singleton
+        fun providePdfiumEngine(@ApplicationContext context: Context): PdfiumEngine =
+            PdfiumEngine(context)
+
+        @Provides @Singleton
+        fun provideTesseractOcrEngine(@ApplicationContext context: Context): TesseractOcrEngine =
+            TesseractOcrEngine(context)
+    }
 }
