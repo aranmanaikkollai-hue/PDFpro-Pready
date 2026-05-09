@@ -43,4 +43,15 @@
     <string name="low_memory_mode">Low Memory Mode</string>
     <string name="annotation_color">Annotation Color</string>
     <string name="performance_profile">Performance Profile</string>
+
+    <!-- Missing strings from latest log -->
+    <string name="open_pdf">Open PDF</string>
+    <string name="scan_document">Scan Document</string>
+    <string name="pdf_tools">PDF Tools</string>
+    <string name="no_recent_files">No recent files</string>
+    <string name="action_add_favorite">Add to favorites</string>
+    <string name="search_pdf">Search PDF</string>
+    <string name="bookmark_added">Bookmark added</string>
+    <string name="share_pdf">Share PDF</string>
+    <string name="action_properties">Properties</string>
 </resources>
