@@ -1,69 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/controls"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <ProgressBar
+    <!-- Document corner overlay -->
+    <View
+        android:id="@+id/scanOverlay"
+        android:layout_width="280dp"
+        android:layout_height="380dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_scan_overlay" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/previewView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/previewView" />
+        app:indicatorColor="@color/white" />
 
     <LinearLayout
-        android:id="@+id/controls"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/scrim"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <Button android:id="@+id/btnCapture"    android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Capture"/>
-            <Button android:id="@+id/btnSave"       android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save"/>
-            <Button android:id="@+id/btnClear"      android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Clear"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAuto"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto: OFF"
+                android:textColor="@color/white"
+                app:strokeColor="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCapture"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginHorizontal="24dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="36dp"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="32dp"
+                app:iconTint="@color/black"
+                app:backgroundTint="@color/white" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button android:id="@+id/btnAuto"       android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Auto"/>
-            <Button android:id="@+id/btnColor"      android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Color"/>
-            <Button android:id="@+id/btnGrayscale"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gray"/>
-            <Button android:id="@+id/btnBlackWhite" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="B/W"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvPageCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="0 pages" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPages"
-            android:layout_width="match_parent"
-            android:layout_height="120dp" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
