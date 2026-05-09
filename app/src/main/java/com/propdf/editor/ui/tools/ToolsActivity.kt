@@ -3,101 +3,84 @@ package com.propdf.editor.ui.tools
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 import com.propdf.editor.R
+import com.propdf.editor.util.FileUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
 
 @AndroidEntryPoint
 class ToolsActivity : AppCompatActivity() {
 
     private val viewModel: ToolsViewModel by viewModels()
+    private lateinit var recyclerView: RecyclerView
+
+    private var pendingOperation: ((Uri, Uri) -> Unit)? = null
+
+    private val pickPdf = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let {
+            val out = FileUtils.createOutputUri(this, "output_${System.currentTimeMillis()}.pdf")
+            pendingOperation?.invoke(it, out)
+            pendingOperation = null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tools)
 
+        findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
+        recyclerView = findViewById(R.id.recyclerView)
+
+        val tools = listOf(
+            ToolItem(R.drawable.ic_color, "Merge PDFs") { mergePdfs() },
+            ToolItem(R.drawable.ic_grayscale, "Split PDF") { pickPdf { src, out -> viewModel.splitPdf(src, listOf(0), out) } },
+            ToolItem(R.drawable.ic_black_white, "Compress") { pickPdf { src, out -> viewModel.compressPdf(src, out) } },
+            ToolItem(R.drawable.ic_back, "Rotate") { pickPdf { src, out -> viewModel.rotatePages(src, listOf(0), 90, out) } },
+            ToolItem(R.drawable.ic_camera, "Delete Pages") { pickPdf { src, out -> viewModel.deletePages(src, listOf(0), out) } },
+            ToolItem(R.drawable.bg_pdf_icon, "Watermark") { pickPdf { src, out -> viewModel.addWatermark(src, "ProPDF", out) } },
+            ToolItem(R.drawable.ic_camera, "Encrypt") { pickPdf { src, out -> viewModel.encryptPdf(src, "password", out) } },
+            ToolItem(R.drawable.ic_color, "Images to PDF") { /* TODO: pick images */ },
+            ToolItem(R.drawable.ic_grayscale, "PDF to Images") { pickPdf { src, out -> viewModel.pdfToImages(src, out) } },
+            ToolItem(R.drawable.ic_back, "Extract Text") { pickPdf { src, _ -> viewModel.extractText(src) } }
+        )
+
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.adapter = ToolAdapter(tools) { it.action() }
+
         observeViewModel()
-        // TODO: Wire up your UI buttons to call the methods below
+    }
+
+    private fun mergePdfs() {
+        // Simplified: pick two PDFs
+        pickPdf.launch(arrayOf("application/pdf"))
+    }
+
+    private fun pickPdf(action: (Uri, Uri) -> Unit) {
+        pendingOperation = action
+        pickPdf.launch(arrayOf("application/pdf"))
     }
 
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.isProcessing.collect { /* show/hide progress */ }
+                    viewModel.result.collect { it?.let { Toast.makeText(this@ToolsActivity, it, Toast.LENGTH_SHORT).show() } }
                 }
                 launch {
-                    viewModel.result.collect { msg ->
-                        msg?.let { Toast.makeText(this@ToolsActivity, it, Toast.LENGTH_SHORT).show() }
-                    }
-                }
-                launch {
-                    viewModel.error.collect { err ->
-                        err?.let { Toast.makeText(this@ToolsActivity, "Error: $it", Toast.LENGTH_LONG).show() }
-                    }
-                }
-                launch {
-                    viewModel.extractedText.collect { text ->
-                        text?.let { /* display extracted text */ }
-                    }
+                    viewModel.error.collect { it?.let { Toast.makeText(this@ToolsActivity, "Error: $it", Toast.LENGTH_LONG).show() } }
                 }
             }
         }
     }
 
-    // Helper to convert File -> Uri
-    private fun fileToUri(file: File): Uri = FileProvider.getUriForFile(
-        this, "${packageName}.fileprovider", file
-    )
-
-    // Example wiring methods — call these from your buttons
-    fun doMerge(file1: File, file2: File, out: File) {
-        viewModel.mergePdfs(
-            listOf(fileToUri(file1), fileToUri(file2)),
-            fileToUri(out)
-        )
-    }
-
-    fun doSplit(source: File, pageList: List<Int>, out: File) {
-        viewModel.splitPdf(fileToUri(source), pageList, fileToUri(out))
-    }
-
-    fun doCompress(source: File, out: File) {
-        viewModel.compressPdf(fileToUri(source), fileToUri(out))
-    }
-
-    fun doRotate(source: File, pages: List<Int>, degrees: Int, out: File) {
-        viewModel.rotatePages(fileToUri(source), pages, degrees, fileToUri(out))
-    }
-
-    fun doDeletePages(source: File, pages: List<Int>, out: File) {
-        viewModel.deletePages(fileToUri(source), pages, fileToUri(out))
-    }
-
-    fun doWatermark(source: File, text: String, out: File) {
-        viewModel.addWatermark(fileToUri(source), text, fileToUri(out))
-    }
-
-    fun doEncrypt(source: File, password: String, out: File) {
-        viewModel.encryptPdf(fileToUri(source), password, fileToUri(out))
-    }
-
-    fun doImagesToPdf(images: List<File>, out: File) {
-        viewModel.imagesToPdf(images.map { fileToUri(it) }, fileToUri(out))
-    }
-
-    fun doPdfToImages(source: File, outDir: File) {
-        viewModel.pdfToImages(fileToUri(source), fileToUri(outDir))
-    }
-
-    fun doExtractText(source: File) {
-        viewModel.extractText(fileToUri(source))
-    }
+    data class ToolItem(val icon: Int, val title: String, val action: () -> Unit)
 }
