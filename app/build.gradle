@@ -9,7 +9,12 @@ plugins {
 android {
     namespace 'com.propdf.editor'
     compileSdk 34
-
+packagingOptions {
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+}
     defaultConfig {
         applicationId "com.propdf.editor"
         minSdk 21
